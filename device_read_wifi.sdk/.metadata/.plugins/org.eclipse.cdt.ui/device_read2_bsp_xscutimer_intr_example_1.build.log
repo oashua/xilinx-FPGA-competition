@@ -1,0 +1,8 @@
+07:25:49 **** Build of configuration Debug for project device_read2_bsp_xscutimer_intr_example_1 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+' '
+make: Nothing to be done for 'main-build'.
+
+07:25:49 Build Finished (took 306ms)
+

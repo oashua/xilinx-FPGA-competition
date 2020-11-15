@@ -1,0 +1,42 @@
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
+| Date         : Sat Nov 14 23:18:21 2020
+| Host         : LAPTOP-NVARLAE3 running 64-bit major release  (build 9200)
+| Command      : report_drc -file design_1_wrapper_drc_opted.rpt -pb design_1_wrapper_drc_opted.pb -rpx design_1_wrapper_drc_opted.rpx
+| Design       : design_1_wrapper
+| Device       : xc7z020clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 1
++-------------+----------+-------------------------------------------------------------+------------+
+| Rule        | Severity | Description                                                 | Violations |
++-------------+----------+-------------------------------------------------------------+------------+
+| PLHOLDVIO-2 | Warning  | Non-Optimal connections which could lead to hold violations | 1          |
++-------------+----------+-------------------------------------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+PLHOLDVIO-2#1 Warning
+Non-Optimal connections which could lead to hold violations  
+A LUT design_1_i/ads8688_0/inst/clk_inst/CS_i_2 is driving clock pin of 85 cells. This could lead to large hold time violations. Involved cells are:
+design_1_i/ads8688_0/inst/CS_reg, design_1_i/ads8688_0/inst/CS_reg_lopt_replica, design_1_i/ads8688_0/inst/FSM_sequential_order_reg[0], design_1_i/ads8688_0/inst/FSM_sequential_order_reg[1], design_1_i/ads8688_0/inst/FSM_sequential_order_reg[2], design_1_i/ads8688_0/inst/FSM_sequential_order_reg[3], design_1_i/ads8688_0/inst/PRC_reg[10], design_1_i/ads8688_0/inst/PRC_reg[11], design_1_i/ads8688_0/inst/PRC_reg[12], design_1_i/ads8688_0/inst/PRC_reg[9], design_1_i/ads8688_0/inst/RST_reg, design_1_i/ads8688_0/inst/SDI_reg, design_1_i/ads8688_0/inst/ch_sel_reg[10], design_1_i/ads8688_0/inst/ch_sel_reg[12], design_1_i/ads8688_0/inst/cnt_reg[0] (the first 15 of 85 listed)
+Related violations: <none>
+
+

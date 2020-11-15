@@ -1,0 +1,168 @@
+#include "xparameters.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "xil_exception.h"
+#include "xil_printf.h"
+
+
+#ifndef TESTAPP_GEN
+#define TIMER_DEVICE_ID		XPAR_XSCUTIMER_0_DEVICE_ID
+#define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
+#define TIMER_IRPT_INTR		XPAR_SCUTIMER_INTR
+#endif
+
+#define TIMER_LOAD_VALUE	XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ/2-1
+
+
+int ScuTimerIntrExample(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr,
+			u16 TimerDeviceId, u16 TimerIntrId);
+
+static void TimerIntrHandler(void *CallBackRef);
+
+static int TimerSetupIntrSystem(XScuGic *IntcInstancePtr,
+				XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+
+static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
+
+
+#ifndef TESTAPP_GEN
+XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance */
+XScuGic IntcInstance;		/* Interrupt Controller Instance */
+#endif
+
+int time;
+volatile int TimerExpired;
+
+// #ifndef TESTAPP_GEN
+// int main(void)
+// {
+// 	int Status;
+
+// 	xil_printf("SCU Timer Interrupt Example Test \r\n");
+
+// 	Status = ScuTimerIntrExample(&IntcInstance, &TimerInstance,
+// 				TIMER_DEVICE_ID, TIMER_IRPT_INTR);
+// 	if (Status != XST_SUCCESS) {
+// 		xil_printf("SCU Timer Interrupt Example Test Failed\r\n");
+// 		return XST_FAILURE;
+// 	}
+
+// 	xil_printf("Successfully ran SCU Timer Interrupt Example Test\r\n");
+// 	return XST_SUCCESS;
+// }
+// #endif
+
+
+int ScuTimerIntrExample(XScuGic *IntcInstancePtr, XScuTimer * TimerInstancePtr,
+			u16 TimerDeviceId, u16 TimerIntrId)
+{
+	int Status;
+	int LastTimerExpired = 0;
+	XScuTimer_Config *ConfigPtr;
+
+
+	ConfigPtr = XScuTimer_LookupConfig(TimerDeviceId);
+
+
+	Status = XScuTimer_CfgInitialize(TimerInstancePtr, ConfigPtr,
+					ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+
+	Status = XScuTimer_SelfTest(TimerInstancePtr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+
+	Status = TimerSetupIntrSystem(IntcInstancePtr,
+					TimerInstancePtr, TimerIntrId);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+
+	XScuTimer_EnableAutoReload(TimerInstancePtr);
+
+
+	XScuTimer_LoadTimer(TimerInstancePtr, TIMER_LOAD_VALUE);
+
+
+	XScuTimer_Start(TimerInstancePtr);
+
+	while (1) {
+
+		while (TimerExpired == LastTimerExpired) {
+		}
+
+		LastTimerExpired = TimerExpired;
+
+		if (TimerExpired == time) {
+			XScuTimer_Stop(TimerInstancePtr);
+			break;
+		}
+	}
+
+	TimerDisableIntrSystem(IntcInstancePtr, TimerIntrId);
+
+	return XST_SUCCESS;
+}
+
+
+
+static int TimerSetupIntrSystem(XScuGic *IntcInstancePtr,
+			      XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+{
+	int Status;
+
+#ifndef TESTAPP_GEN
+	XScuGic_Config *IntcConfig;
+
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	if (NULL == IntcConfig) {
+		return XST_FAILURE;
+	}
+
+	Status = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
+					IntcConfig->CpuBaseAddress);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+
+	Xil_ExceptionInit();
+
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT,
+				(Xil_ExceptionHandler)XScuGic_InterruptHandler,
+				IntcInstancePtr);
+#endif
+
+	Status = XScuGic_Connect(IntcInstancePtr, TimerIntrId,
+				(Xil_ExceptionHandler)TimerIntrHandler,
+				(void *)TimerInstancePtr);
+	if (Status != XST_SUCCESS) {
+		return Status;
+	}
+
+	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+
+
+	XScuTimer_EnableInterrupt(TimerInstancePtr);
+
+#ifndef TESTAPP_GEN
+
+	Xil_ExceptionEnable();
+#endif
+
+	return XST_SUCCESS;
+}
+
+
+
+static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId)
+{
+
+	XScuGic_Disconnect(IntcInstancePtr, TimerIntrId);
+}

@@ -1,0 +1,89 @@
+23:25:08 **** Build of configuration Debug for project device_read ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+' '
+'Building file: ../src/ads8688.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/ads8688.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../device_read_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/ads8688.d" -MT"src/ads8688.o" -o "src/ads8688.o" "../src/ads8688.c"
+../src/ads8688.c: In function 'ads8688_init':
+../src/ads8688.c:23:2: warning: implicit declaration of function 'delay_ms' [-Wimplicit-function-declaration]
+  delay_ms(100);
+  ^~~~~~~~
+'Finished building: ../src/ads8688.c'
+' '
+'Building file: ../src/helloworld.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/helloworld.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../device_read_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/helloworld.d" -MT"src/helloworld.o" -o "src/helloworld.o" "../src/helloworld.c"
+../src/helloworld.c:62:0: warning: "UART_DEVICE_ID" redefined
+ #define UART_DEVICE_ID XPAR_UARTLITE_0_DEVICE_ID
+ 
+In file included from ../src/platform.h:36:0,
+                 from ../src/helloworld.c:49:
+../src/platform_config.h:5:0: note: this is the location of the previous definition
+ #define UART_DEVICE_ID 0
+ 
+../src/helloworld.c: In function 'main':
+../src/helloworld.c:99:7: warning: pointer targets in passing argument 1 of 'send' differ in signedness [-Wpointer-sign]
+  send("AT+CIPSEND=0,6\r\n");
+       ^~~~~~~~~~~~~~~~~~~~
+In file included from ../src/helloworld.c:60:0:
+../src/wifi.h:23:6: note: expected 'unsigned char *' but argument is of type 'char *'
+ void send(unsigned char *str);
+      ^~~~
+../src/helloworld.c:101:7: warning: pointer targets in passing argument 1 of 'send' differ in signedness [-Wpointer-sign]
+  send("hello.\r\n");
+       ^~~~~~~~~~~~
+In file included from ../src/helloworld.c:60:0:
+../src/wifi.h:23:6: note: expected 'unsigned char *' but argument is of type 'char *'
+ void send(unsigned char *str);
+      ^~~~
+../src/helloworld.c: In function 'init':
+../src/helloworld.c:123:2: warning: implicit declaration of function 'gpio_init'; did you mean 'zero_init'? [-Wimplicit-function-declaration]
+  gpio_init(GPIO_0_DEVICE_ID);
+  ^~~~~~~~~
+  zero_init
+../src/helloworld.c:123:12: error: 'GPIO_0_DEVICE_ID' undeclared (first use in this function); did you mean 'XPAR_GPIO_0_DEVICE_ID'?
+  gpio_init(GPIO_0_DEVICE_ID);
+            ^~~~~~~~~~~~~~~~
+            XPAR_GPIO_0_DEVICE_ID
+../src/helloworld.c:123:12: note: each undeclared identifier is reported only once for each function it appears in
+../src/helloworld.c: In function 'work':
+../src/helloworld.c:167:7: warning: pointer targets in passing argument 1 of 'send' differ in signedness [-Wpointer-sign]
+  send("AT+CIPSEND=0,5\r\n");
+       ^~~~~~~~~~~~~~~~~~~~
+In file included from ../src/helloworld.c:60:0:
+../src/wifi.h:23:6: note: expected 'unsigned char *' but argument is of type 'char *'
+ void send(unsigned char *str);
+      ^~~~
+../src/helloworld.c:168:2: warning: implicit declaration of function 'add_w' [-Wimplicit-function-declaration]
+  add_w(read_result);
+  ^~~~~
+../src/helloworld.c:168:8: error: 'read_result' undeclared (first use in this function)
+  add_w(read_result);
+        ^~~~~~~~~~~
+../src/helloworld.c: In function 'store':
+../src/helloworld.c:175:2: error: 'send_data' undeclared (first use in this function)
+  send_data[0] = 's';
+  ^~~~~~~~~
+../src/helloworld.c:178:7: warning: pointer targets in passing argument 1 of 'send' differ in signedness [-Wpointer-sign]
+  send("AT+CIPSEND=0,2\r\n");
+       ^~~~~~~~~~~~~~~~~~~~
+In file included from ../src/helloworld.c:60:0:
+../src/wifi.h:23:6: note: expected 'unsigned char *' but argument is of type 'char *'
+ void send(unsigned char *str);
+      ^~~~
+../src/helloworld.c: At top level:
+../src/helloworld.c:184:6: warning: conflicting types for 'add_w'
+ void add_w(u8 *data)
+      ^~~~~
+../src/helloworld.c:168:2: note: previous implicit declaration of 'add_w' was here
+  add_w(read_result);
+  ^~~~~
+../src/helloworld.c: In function 'init':
+../src/helloworld.c:137:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+make: *** [src/subdir.mk:35: src/helloworld.o] Error 1
+
+23:25:08 Build Finished (took 720ms)
+
